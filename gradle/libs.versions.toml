@@ -1,0 +1,78 @@
+[versions]
+# Testing
+junit-jupiter = "6.0.0-RC3"
+junit-platform = "1.11.3"
+
+# Apache Flink
+flink = "2.1.0"
+flink-connector-jdbc = "3.3.0-1.20"
+
+# Database
+singlestore-jdbc = "1.2.9-beta0"
+
+# Logging
+log4j = "2.24.1"
+
+# Code Quality
+spotless = "8.0.0"
+
+[libraries]
+# JUnit 5 Testing
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-jupiter" }
+# Jupiter (pulls in api + engine from the BOM)
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
+# Platform Launcher
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+
+
+# Apache Flink
+flink-runtime   = { group = "org.apache.flink", name = "flink-runtime", version.ref = "flink" }
+flink-streaming-java = { group = "org.apache.flink", name = "flink-streaming-java", version.ref = "flink" }
+
+flink-table-api-java = { group = "org.apache.flink", name = "flink-table-api-java", version.ref = "flink" }
+flink-table-runtime = { group = "org.apache.flink", name = "flink-table-runtime", version.ref = "flink" }
+flink-connector-jdbc = { group = "org.apache.flink", name = "flink-connector-jdbc", version.ref = "flink-connector-jdbc" }
+flink-table-bridge-java-streaming = { group = "org.apache.flink", name = "flink-table-api-java-bridge-streaming", version.ref = "flink" }
+flink-table-bridge-java = { group = "org.apache.flink", name = "flink-table-api-java-bridge" , version.ref = "flink"}
+
+flink-clients = { group = "org.apache.flink", name = "flink-clients", version.ref = "flink" }
+flink-datagen = { group = "org.apache.flink", name = "flink-connector-datagen", version.ref = "flink" }
+flink-test-utils = { group = "org.apache.flink", name = "flink-test-utils-junit", version.ref = "flink" }
+
+# SingleStore Database
+singlestore-jdbc-client = { group = "com.singlestore", name = "singlestore-jdbc-client", version.ref = "singlestore-jdbc" }
+
+# Logging
+log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
+log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
+log4j-slf4j-impl = { group = "org.apache.logging.log4j", name = "log4j-slf4j-impl", version.ref = "log4j" }
+
+[bundles]
+# Testing bundle
+testing = [
+  "junit-jupiter",
+  "junit-platform-launcher"
+]
+
+# Flink core bundle
+flink-core = [
+  "flink-streaming-java",
+  "flink-clients"
+]
+
+# Database bundle
+database = [
+  "flink-connector-jdbc",
+  "singlestore-jdbc-client"
+]
+
+# Logging bundle
+logging = [
+  "log4j-api",
+  "log4j-core",
+  "log4j-slf4j-impl"
+]
+
+[plugins]
+# Code Quality
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

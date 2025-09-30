@@ -1,0 +1,69 @@
+services:
+  # ========================
+  # SingleStore Database
+  # ========================
+  singlestore:
+    image: ghcr.io/singlestore-labs/singlestoredb-dev:latest
+    container_name: singlestore
+    platform: linux/amd64
+    ports:
+      - "3306:3306" # MySQL protocol
+      - "6060:8080" # Studio web interface
+      - "6000:9000" # Cluster management
+    environment:
+      ROOT_PASSWORD: password
+      START_AFTER_INIT: "Y"
+      SINGLESTORE_LICENSE: "" # Add your license key if you have one
+    volumes:
+      - singlestore_data:/var/lib/memsql
+      - ./.devcontainer/singlestore/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./.devcontainer/singlestore/init.sql:/init.sql
+    networks:
+      - fdx
+    restart: unless-stopped
+    healthcheck:
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ========================
+  # Apache Flink Cluster
+  # ========================
+  flink-jobmanager:
+    image: flink:2.1.0-scala_2.12-java21
+    container_name: flink-jobmanager
+    command: jobmanager
+    ports:
+      - "8081:8081" # Flink Web UI
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: flink-jobmanager
+    volumes:
+      - ./.devcontainer/flink/jobs:/opt/flink/usrlib
+    networks:
+      - fdx
+
+  flink-taskmanager:
+    image: flink:2.1.0-scala_2.12-java21
+    container_name: flink-taskmanager
+    command: taskmanager
+    depends_on:
+      - flink-jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: flink-jobmanager
+        taskmanager.numberOfTaskSlots: 2
+    networks:
+      - fdx
+
+volumes:
+  singlestore_data:
+
+networks:
+  fdx:
+    driver: bridge

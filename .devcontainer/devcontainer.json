@@ -1,0 +1,10 @@
+{
+  "name": "singlestore",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "remoteEnv": {
+    "COMPOSE_PROJECT_NAME": "singlestore"
+  }
+}
