@@ -2,7 +2,7 @@
 
 ## To Run
 
-cd fdx-flink-framework
+cd rivulet
 docker compose -f .devcontainer/compose.yaml -p shipment_visibility up -d
 
 ## Service Endpoints:
